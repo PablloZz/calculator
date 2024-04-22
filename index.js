@@ -11,7 +11,6 @@ const divide = (a, b) => a / b;
 let firstOperand = "0";
 let operator = "";
 let secondOperand = "";
-let shouldCalculateResult = false;
 
 function operate(a, operator, b) {
   a = Number(a);
@@ -31,13 +30,8 @@ function operate(a, operator, b) {
 
 const checkIfNumber = (value) => Number.isFinite(Number(value));
 
-function updateExpressionInfo(newPart) {
+function updateExpressionParts(newPart) {
   const isNumber = checkIfNumber(newPart);
-
-  if ((newPart === "=" && secondOperand) || (secondOperand && !isNumber)) {
-    shouldCalculateResult = true;
-    return;
-  }
 
   if (!operator && isNumber) {
     firstOperand = firstOperand === "0" ? newPart : firstOperand + newPart;
@@ -47,11 +41,10 @@ function updateExpressionInfo(newPart) {
     secondOperand = secondOperand === "0" ? newPart : secondOperand + newPart;
   }
 
-  if (!isNumber && newPart !== "=") operator = newPart;
-  if (newPart === "=" && !secondOperand) shouldCalculateResult = false;
+  if (!isNumber) operator = newPart;
 }
 
-function getExpressionString() {
+function getExpressionString(shouldCalculateResult) {
   let expression = firstOperand;
 
   if (operator) expression += ` ${operator} `;
@@ -61,55 +54,43 @@ function getExpressionString() {
   return expression;
 }
 
-function handleExpressionResult() {
-  let expressionResult = "";
-
-  if (shouldCalculateResult) {
-    expressionResult = operate(firstOperand, operator, secondOperand);
-    firstOperand = expressionResult;
-    operator = "";
-    secondOperand = "";
-    shouldCalculateResult = false;
-  }
-
-  return expressionResult;
-}
-
 function populateDisplay(expression, result = "") {
   expressionOutput.textContent = expression;
   expressionResultOutput.textContent = result;
 }
 
-function startNewExpression(result, value) {
+function startNewExpression(result, newOperator = "") {
   firstOperand = result;
   secondOperand = "";
-  operator = value;
-  const expression = getExpressionString();
+  operator = newOperator;
+}
+
+function handleExpressionInput(event) {
+  const buttonValue = event.target.textContent;
+  let result = "";
+
+  if (secondOperand && !checkIfNumber(buttonValue)) {
+    result = operate(firstOperand, operator, secondOperand);
+    startNewExpression(result, buttonValue);
+  } else {
+    updateExpressionParts(buttonValue);
+  }
+  
+  const expression = getExpressionString(false);
   populateDisplay(expression);
 }
 
-function resetExpressionParts() {
-  firstOperand = "0";
-  secondOperand = "";
-  operator = "";
-}
+function handleExpressionResult() {
+  if (!secondOperand) return;
 
-function handleExpression(event) {
-  const buttonValue = event.target.textContent;
-  updateExpressionInfo(buttonValue);
-  const expression = getExpressionString();
-  const result = handleExpressionResult();
+  const expression = getExpressionString(true);
+  const result = operate(firstOperand, operator, secondOperand);
   populateDisplay(expression, result);
-
-  if (result && !checkIfNumber(buttonValue) && buttonValue !== "=") {
-    startNewExpression(result, buttonValue);
-  }
-
-  if (result && buttonValue === "=") resetExpressionParts();
+  startNewExpression(result);
 }
 
 expressionButtons.forEach((button) => {
-  button.addEventListener("click", handleExpression);
+  button.addEventListener("click", handleExpressionInput);
 });
 
-equalButton.addEventListener("click", handleExpression);
+equalButton.addEventListener("click", handleExpressionResult);
