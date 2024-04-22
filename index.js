@@ -1,7 +1,8 @@
 const expressionOutput = document.querySelector(".expression");
 const expressionResultOutput = document.querySelector(".result");
 const expressionButtons = document.querySelectorAll(".expression-button");
-const equalButton = document.querySelector(".equals-button");
+const equalsButton = document.querySelector(".equals-button");
+const clearButton = document.querySelector(".clear-button");
 
 const add = (a, b) => a + b;
 const subtract = (a, b) => a - b;
@@ -75,7 +76,7 @@ function handleExpressionInput(event) {
   } else {
     updateExpressionParts(buttonValue);
   }
-  
+
   const expression = getExpressionString(false);
   populateDisplay(expression);
 }
@@ -89,8 +90,17 @@ function handleExpressionResult() {
   startNewExpression(result);
 }
 
+function clearCalculator() {
+  firstOperand = "0";
+  secondOperand = "";
+  operator = "";
+  expressionOutput.textContent = firstOperand;
+  expressionResultOutput.textContent = "";
+}
+
 expressionButtons.forEach((button) => {
   button.addEventListener("click", handleExpressionInput);
 });
 
-equalButton.addEventListener("click", handleExpressionResult);
+equalsButton.addEventListener("click", handleExpressionResult);
+clearButton.addEventListener("click", clearCalculator);
