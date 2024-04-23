@@ -55,9 +55,9 @@ function getExpressionString(shouldCalculateResult) {
   return expression;
 }
 
-function populateDisplay(expression, result = "") {
+function populateDisplay(expression, result) {
   expressionOutput.textContent = expression;
-  expressionResultOutput.textContent = result;
+  if (result) expressionResultOutput.textContent = result;
 }
 
 function startNewExpression(result, newOperator = "") {
@@ -78,7 +78,7 @@ function handleExpressionInput(event) {
   }
 
   const expression = getExpressionString(false);
-  populateDisplay(expression);
+  populateDisplay(expression, result);
 }
 
 function handleExpressionResult() {
