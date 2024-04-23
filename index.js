@@ -33,20 +33,33 @@ function operate(a, operator, b) {
   }
 }
 
-const checkIfNumber = (value) => Number.isFinite(Number(value));
+const checkIfNumber = (value) => Number.isFinite(Number.parseFloat(value));
+const checkIfOperator = (value) => !checkIfNumber(value) && value !== ".";
+
+function getUpdatedOperand(operand, newPart) {
+  const isDot = newPart === ".";
+
+  if (isDot && operand.includes(".")) return operand;
+  if (checkIfNumber(operand) && isDot) return `${operand}.`;
+  if (!checkIfNumber(operand) && isDot) return "0.";
+  if (operand === "0" && !isDot) return newPart;
+  if (operand !== "0" && !isDot) return operand + newPart;
+}
 
 function updateExpressionParts(newPart) {
-  const isNumber = checkIfNumber(newPart);
+  const isOperator = checkIfOperator(newPart);
 
-  if (!operator && isNumber) {
-    firstOperand = firstOperand === "0" ? newPart : firstOperand + newPart;
+  if (!operator && !isOperator) {
+    firstOperand = getUpdatedOperand(firstOperand, newPart);
+    return;
   }
 
-  if (operator && isNumber) {
-    secondOperand = secondOperand === "0" ? newPart : secondOperand + newPart;
+  if (operator && !isOperator) {
+    secondOperand = getUpdatedOperand(secondOperand, newPart);
+    return;
   }
 
-  if (!isNumber) operator = newPart;
+  if (isOperator) operator = newPart;
 }
 
 function getExpressionString(shouldCalculateResult) {
@@ -74,7 +87,7 @@ function handleExpressionInput(event) {
   const buttonValue = event.target.textContent;
   let result = "";
 
-  if (secondOperand && !checkIfNumber(buttonValue)) {
+  if (secondOperand && checkIfOperator(buttonValue)) {
     result = operate(firstOperand, operator, secondOperand);
     startNewExpression(result, buttonValue);
   } else {
