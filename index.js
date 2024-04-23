@@ -7,7 +7,11 @@ const clearButton = document.querySelector(".clear-button");
 const add = (a, b) => a + b;
 const subtract = (a, b) => a - b;
 const multiply = (a, b) => a * b;
-const divide = (a, b) => a / b;
+const divide = (a, b) => {
+  if (b === 0) return "ERROR";
+
+  return a / b;
+};
 
 let firstOperand = "0";
 let operator = "";
@@ -61,7 +65,7 @@ function populateDisplay(expression, result) {
 }
 
 function startNewExpression(result, newOperator = "") {
-  firstOperand = result;
+  firstOperand = result === "ERROR" ? "0" : result;
   secondOperand = "";
   operator = newOperator;
 }
