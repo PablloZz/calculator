@@ -5,3 +5,113 @@
   border: none;
   text-decoration: none;
 }
+
+body {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Verdana, sans-serif;
+  background: hsl(120, 100%, 97%);
+  padding: 20px;
+}
+
+.calculator {
+  width: 100%;
+  max-width: 400px;
+  min-width: 260px;
+}
+
+.display-frame {
+  background: hsl(180, 20%, 75%);
+  padding: 20px;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+}
+
+.display {
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: hsl(100, 40%, 93%);
+  padding: 10px;
+}
+
+.output {
+  font-size: 26px;
+  text-align: right;
+  word-break: break-all;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 25px 15px;
+  background: hsl(0, 10%, 85%);
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+}
+
+.top-buttons,
+.middle-buttons,
+.bottom-buttons {
+  flex: 1;
+  display: flex;
+  gap: 10px;
+}
+
+.top-button {
+  background: hsl(170, 10%, 50%);
+}
+
+.top-button,
+.middle-button,
+.bottom-button {
+  flex: 1;
+  height: 50px;
+}
+
+.top-button,
+.middle-button,
+.bottom-button,
+.equals-button {
+  min-width: 50px;
+  padding: 5px;
+  font-size: 26px;
+  line-height: 150%;
+  color: hsl(0, 0%, 100%);
+}
+
+.middle-button,
+.bottom-button {
+  background: hsl(0, 0%, 75%);
+}
+
+.bottom-left-buttons-rows {
+  flex: 0 1 275px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.bottom-left-buttons-row {
+  width: 100%;
+  display: flex;
+  gap: 10px;
+}
+
+.dot-button {
+  flex: 0 2 100%;
+}
+
+.zero-button {
+  flex: 0 1 100%;
+}
+
+.equals-button {
+  flex: 0 1.2220094043887147335423197492163 85px;
+  background: hsl(39, 98%, 54%);
+}
