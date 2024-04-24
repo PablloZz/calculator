@@ -10,29 +10,46 @@
 </head>
 
 <body>
-  <div>
-    <div>
-      <output class="expression">0</output><br>
-      <output class="result"></output>
+  <div class="calculator">
+    <div class="display-frame">
+      <div class="display">
+        <output class="expression output">0</output>
+        <output class="result output"></output>
+      </div>
     </div>
-    <div>
-      <button class="expression-button">0</button>
-      <button class="expression-button">1</button>
-      <button class="expression-button">2</button>
-      <button class="expression-button">3</button>
-      <button class="expression-button">4</button>
-      <button class="expression-button">5</button>
-      <button class="expression-button">6</button>
-      <button class="expression-button">7</button>
-      <button class="expression-button">8</button>
-      <button class="expression-button">9</button>
-      <button class="expression-button">.</button>
-      <button class="equals-button">=</button>
-      <button class="expression-button">÷</button>
-      <button class="expression-button">+</button>
-      <button class="expression-button">-</button>
-      <button class="expression-button">*</button>
-      <button class="clear-button">AC</button>
+    <div class="buttons">
+      <div class="top-buttons">
+        <button class="clear-button top-button">AC</button>
+        <button class="remove-button top-button">←</button>
+        <button class="expression-button top-button">÷</button>
+        <button class="expression-button top-button">x</button>
+      </div>
+      <div class="middle-buttons">
+        <button class="expression-button middle-button">7</button>
+        <button class="expression-button middle-button">8</button>
+        <button class="expression-button middle-button">9</button>
+        <button class="expression-button middle-button">-</button>
+      </div>
+      <div class="middle-buttons">
+        <button class="expression-button middle-button">4</button>
+        <button class="expression-button middle-button">5</button>
+        <button class="expression-button middle-button">6</button>
+        <button class="expression-button middle-button">+</button>
+      </div>
+      <div class="bottom-buttons">
+        <div class="bottom-left-buttons-rows">
+          <div class="bottom-left-buttons-row">
+            <button class="expression-button bottom-button">1</button>
+            <button class="expression-button bottom-button">2</button>
+            <button class="expression-button bottom-button">3</button>
+          </div>
+          <div class="bottom-left-buttons-row">
+            <button class="expression-button zero-button bottom-button">0</button>
+            <button class="expression-button dot-button bottom-button">.</button>
+          </div>
+        </div>
+        <button class="equals-button">=</button>
+      </div>
     </div>
   </div>
   <script src="./index.js"></script>
