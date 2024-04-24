@@ -23,13 +23,13 @@ function operate(a, operator, b) {
 
   switch (operator) {
     case "+":
-      return add(a, b);
+      return String(add(a, b));
     case "-":
-      return subtract(a, b);
+      return String(subtract(a, b));
     case "x":
-      return multiply(a, b);
+      return String(multiply(a, b));
     case "÷":
-      return divide(a, b);
+      return String(divide(a, b));
   }
 }
 
