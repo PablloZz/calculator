@@ -3,6 +3,7 @@ const expressionResultOutput = document.querySelector(".result");
 const expressionButtons = document.querySelectorAll(".expression-button");
 const equalsButton = document.querySelector(".equals-button");
 const clearButton = document.querySelector(".clear-button");
+const removeButton = document.querySelector(".remove-button");
 
 const add = (a, b) => a + b;
 const subtract = (a, b) => a - b;
@@ -115,9 +116,19 @@ function clearCalculator() {
   expressionResultOutput.textContent = "";
 }
 
+function removeCharacter() {
+  const expression = expressionOutput.textContent;
+  const slicedExpression = expression.trimEnd().slice(0, -1);
+  const updatedExpression = slicedExpression === "" ? "0" : slicedExpression;
+  const expressionParts = updatedExpression.trimEnd().split(" ");
+  [firstOperand, operator = "", secondOperand = ""] = expressionParts;
+  expressionOutput.textContent = expressionParts.join(" ");
+}
+
 expressionButtons.forEach((button) => {
   button.addEventListener("click", handleExpressionInput);
 });
 
 equalsButton.addEventListener("click", handleExpressionResult);
 clearButton.addEventListener("click", clearCalculator);
+removeButton.addEventListener("click", removeCharacter);
