@@ -140,7 +140,7 @@ function removeCharacter() {
   const expression = expressionOutput.textContent;
   const slicedExpression = expression.trimEnd().slice(0, -1);
   const updatedExpression =
-    slicedExpression === "" ? INITIAL_VALUES.firstOperand : slicedExpression;
+    slicedExpression === "" ? INITIAL_VALUES.zero : slicedExpression;
   const expressionParts = updatedExpression.trimEnd().split(" ");
   [
     firstOperand,
