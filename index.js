@@ -15,7 +15,7 @@ const Signs = {
 };
 const expressionOutput = document.querySelector(".expression");
 const expressionResultOutput = document.querySelector(".result");
-const expressionButtons = document.querySelectorAll(".expression-button");
+const buttons = document.querySelector(".buttons");
 const equalsButton = document.querySelector(".equals-button");
 const clearButton = document.querySelector(".clear-button");
 const backspaceButton = document.querySelector(".backspace-button");
@@ -105,20 +105,6 @@ function startNewExpression(result, newOperator) {
   operator = newOperator;
 }
 
-function handleExpressionInput(newValue) {
-  let result = "";
-
-  if (secondOperand && checkIfOperator(newValue)) {
-    result = operate(firstOperand, operator, secondOperand);
-    startNewExpression(result, newValue);
-  } else {
-    updateExpressionParts(newValue);
-  }
-
-  const expression = getExpressionString(false);
-  populateDisplay(expression, result);
-}
-
 function handleExpressionResult() {
   if (!secondOperand) return;
 
@@ -150,6 +136,20 @@ function removeCharacter() {
   expressionOutput.textContent = expressionParts.join(" ");
 }
 
+function handleExpressionInput(newValue) {
+  let result = "";
+
+  if (secondOperand && checkIfOperator(newValue)) {
+    result = operate(firstOperand, operator, secondOperand);
+    startNewExpression(result, newValue);
+  } else {
+    updateExpressionParts(newValue);
+  }
+
+  const expression = getExpressionString(false);
+  populateDisplay(expression, result);
+}
+
 function handleKeyInput(event) {
   const { key } = event;
   const BUTTON_NAME = "BUTTON";
@@ -176,12 +176,15 @@ function handleKeyInput(event) {
   }
 }
 
-expressionButtons.forEach((button) => {
-  button.addEventListener("click", (event) => {
-    handleExpressionInput(event.target.textContent);
-  });
-});
+function handleExpressionButtonsClick(event) {
+  const { target } = event;
 
+  if (target.classList.contains("expression-button")) {
+    handleExpressionInput(target.textContent);
+  }
+}
+
+buttons.addEventListener("click", handleExpressionButtonsClick);
 equalsButton.addEventListener("click", handleExpressionResult);
 clearButton.addEventListener("click", clearCalculator);
 backspaceButton.addEventListener("click", removeCharacter);
