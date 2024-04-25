@@ -34,7 +34,7 @@ function operate(a, operator, b) {
   }
 }
 
-const checkIfNumber = (value) => Number.isFinite(Number.parseFloat(value));
+const checkIfNumber = (value) => !Number.isNaN(Number.parseFloat(value));
 const checkIfOperator = (value) => !checkIfNumber(value) && value !== ".";
 
 function getUpdatedOperand(operand, newPart) {
