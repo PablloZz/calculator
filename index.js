@@ -3,7 +3,7 @@ const expressionResultOutput = document.querySelector(".result");
 const expressionButtons = document.querySelectorAll(".expression-button");
 const equalsButton = document.querySelector(".equals-button");
 const clearButton = document.querySelector(".clear-button");
-const removeButton = document.querySelector(".remove-button");
+const backspaceButton = document.querySelector(".backspace-button");
 
 const add = (a, b) => a + b;
 const subtract = (a, b) => a - b;
@@ -34,7 +34,7 @@ function operate(a, operator, b) {
   }
 }
 
-const checkIfNumber = (value) => Number.isFinite(Number.parseFloat(value));
+const checkIfNumber = (value) => !Number.isNaN(Number.parseFloat(value));
 const checkIfOperator = (value) => !checkIfNumber(value) && value !== ".";
 
 function getUpdatedOperand(operand, newPart) {
@@ -84,15 +84,14 @@ function startNewExpression(result, newOperator = "") {
   operator = newOperator;
 }
 
-function handleExpressionInput(event) {
-  const buttonValue = event.target.textContent;
+function handleExpressionInput(newValue) {
   let result = "";
 
-  if (secondOperand && checkIfOperator(buttonValue)) {
+  if (secondOperand && checkIfOperator(newValue)) {
     result = operate(firstOperand, operator, secondOperand);
-    startNewExpression(result, buttonValue);
+    startNewExpression(result, newValue);
   } else {
-    updateExpressionParts(buttonValue);
+    updateExpressionParts(newValue);
   }
 
   const expression = getExpressionString(false);
@@ -125,10 +124,33 @@ function removeCharacter() {
   expressionOutput.textContent = expressionParts.join(" ");
 }
 
+function handleKeyInput(event) {
+  const { key } = event;
+
+  switch (true) {
+    case checkIfNumber(key):
+    case key === ".":
+    case key === "+":
+    case key === "-":
+      return handleExpressionInput(key);
+    case key === "/" || key === "÷":
+      return handleExpressionInput("÷");
+    case key === "x" || key === "*":
+      return handleExpressionInput("x");
+    case key === "Backspace":
+      return removeCharacter();
+    case (key === "=" || key === "Enter") && event.target.nodeName !== "BUTTON":
+      return handleExpressionResult();
+  }
+}
+
 expressionButtons.forEach((button) => {
-  button.addEventListener("click", handleExpressionInput);
+  button.addEventListener("click", (event) => {
+    handleExpressionInput(event.target.textContent);
+  });
 });
 
 equalsButton.addEventListener("click", handleExpressionResult);
 clearButton.addEventListener("click", clearCalculator);
-removeButton.addEventListener("click", removeCharacter);
+backspaceButton.addEventListener("click", removeCharacter);
+window.addEventListener("keydown", handleKeyInput);
