@@ -123,10 +123,16 @@ function clearCalculator() {
 }
 
 function removeCharacter() {
-  const expression = expressionOutput.textContent;
-  const slicedExpression = expression.trimEnd().slice(0, -1);
-  const updatedExpression =
-    slicedExpression === "" ? INITIAL_VALUES.zero : slicedExpression;
+  const expression = expressionOutput.textContent.trimEnd();
+  const slicedExpression = expression.slice(0, -1);
+  let updatedExpression;
+
+  if (slicedExpression === "" || expression === "Infinity") {
+    updatedExpression = INITIAL_VALUES.zero;
+  } else {
+    updatedExpression = slicedExpression;
+  }
+
   const expressionParts = updatedExpression.trimEnd().split(" ");
   [
     firstOperand,
