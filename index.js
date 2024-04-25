@@ -3,7 +3,7 @@ const expressionResultOutput = document.querySelector(".result");
 const expressionButtons = document.querySelectorAll(".expression-button");
 const equalsButton = document.querySelector(".equals-button");
 const clearButton = document.querySelector(".clear-button");
-const removeButton = document.querySelector(".remove-button");
+const backspaceButton = document.querySelector(".backspace-button");
 
 const add = (a, b) => a + b;
 const subtract = (a, b) => a - b;
@@ -131,4 +131,4 @@ expressionButtons.forEach((button) => {
 
 equalsButton.addEventListener("click", handleExpressionResult);
 clearButton.addEventListener("click", clearCalculator);
-removeButton.addEventListener("click", removeCharacter);
+backspaceButton.addEventListener("click", removeCharacter);
