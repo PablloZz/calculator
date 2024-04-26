@@ -16,7 +16,6 @@ const Signs = {
 const expressionOutput = document.querySelector(".expression");
 const expressionResultOutput = document.querySelector(".result");
 const buttons = document.querySelector(".buttons");
-const clearButton = document.querySelector(".clear-button");
 
 let firstOperand = INITIAL_VALUES.zero;
 let operator = INITIAL_VALUES.empty;
@@ -90,14 +89,6 @@ function calculateExpression() {
   startNewExpression(result);
 }
 
-function clearCalculator() {
-  firstOperand = INITIAL_VALUES.zero;
-  secondOperand = INITIAL_VALUES.empty;
-  operator = INITIAL_VALUES.empty;
-  expressionOutput.textContent = firstOperand;
-  expressionResultOutput.textContent = "";
-}
-
 const checkIfNumber = (value) => !Number.isNaN(Number.parseFloat(value));
 
 function getUpdatedOperand(operand, newPart) {
@@ -126,6 +117,14 @@ function updateOperands(newPart) {
     secondOperand = getUpdatedOperand(secondOperand, newPart);
     return;
   }
+}
+
+function clearCalculator() {
+  firstOperand = INITIAL_VALUES.zero;
+  secondOperand = INITIAL_VALUES.empty;
+  operator = INITIAL_VALUES.empty;
+  expressionOutput.textContent = firstOperand;
+  expressionResultOutput.textContent = "";
 }
 
 function handleOperandInput(newPart) {
@@ -189,8 +188,8 @@ function handleButtonClick(event) {
   if (target.classList.contains("operator")) handleOperatorInput(value);
   if (target.classList.contains("equals")) calculateExpression();
   if (target.classList.contains("backspace")) removeCharacter();
+  if (target.classList.contains("clear")) clearCalculator();
 }
 
 buttons.addEventListener("click", handleButtonClick);
-clearButton.addEventListener("click", clearCalculator);
 window.addEventListener("keydown", handleKeyInput);
