@@ -50,7 +50,6 @@ function operate(a, operator, b) {
 }
 
 const checkIfNumber = (value) => !Number.isNaN(Number.parseFloat(value));
-const checkIfOperator = (value) => !checkIfNumber(value) && value !== Signs.DOT;
 
 function getUpdatedOperand(operand, newPart) {
   const isDot = newPart === Signs.DOT;
@@ -68,20 +67,16 @@ function getUpdatedOperand(operand, newPart) {
   }
 }
 
-function updateExpressionParts(newPart) {
-  const isOperator = checkIfOperator(newPart);
-
-  if (!operator && !isOperator) {
+function updateOperands(newPart) {
+  if (!operator) {
     firstOperand = getUpdatedOperand(firstOperand, newPart);
     return;
   }
 
-  if (operator && !isOperator) {
+  if (operator) {
     secondOperand = getUpdatedOperand(secondOperand, newPart);
     return;
   }
-
-  if (isOperator) operator = newPart;
 }
 
 function getExpressionString(shouldCalculateResult) {
@@ -139,17 +134,22 @@ function removeCharacter() {
     operator = INITIAL_VALUES.empty,
     secondOperand = INITIAL_VALUES.empty,
   ] = expressionParts;
-  expressionOutput.textContent = expressionParts.join(" ");
+  populateDisplay(expressionParts.join(" "));
 }
 
-function handleExpressionInput(newValue) {
+function handleNumberInput(newNumber) {
+  updateOperands(newNumber);
+  const expression = getExpressionString(false);
+  populateDisplay(expression);
+}
+
+function handleOperatorInput(newOperator) {
+  operator = newOperator;
   let result = "";
 
-  if (secondOperand && checkIfOperator(newValue)) {
+  if (secondOperand) {
     result = operate(firstOperand, operator, secondOperand);
-    startNewExpression(result, newValue);
-  } else {
-    updateExpressionParts(newValue);
+    startNewExpression(result, newOperator);
   }
 
   const expression = getExpressionString(false);
@@ -167,13 +167,14 @@ function handleKeyInput(event) {
   switch (true) {
     case checkIfNumber(key):
     case key === Signs.DOT:
+      return handleNumberInput(key);
     case key === Signs.PLUS:
     case key === Signs.MINUS:
-      return handleExpressionInput(key);
+      return handleOperatorInput(key);
     case key === Signs.DIVIDE_BACKSLASH || key === Signs.DIVIDE:
-      return handleExpressionInput(Signs.DIVIDE);
+      return handleOperatorInput(Signs.DIVIDE);
     case key === Signs.MULTIPLY_X || key === Signs.MULTIPLY:
-      return handleExpressionInput(Signs.MULTIPLY_X);
+      return handleOperatorInput(Signs.MULTIPLY_X);
     case key === Keys.BACKSPACE:
       return removeCharacter();
     case (key === Signs.EQUAL || key === Keys.ENTER) &&
@@ -182,15 +183,15 @@ function handleKeyInput(event) {
   }
 }
 
-function handleExpressionButtonsClick(event) {
+function handleButtonClick(event) {
   const { target } = event;
+  const value = target.textContent;
 
-  if (target.classList.contains("expression-button")) {
-    handleExpressionInput(target.textContent);
-  }
+  if (target.classList.contains("number")) handleNumberInput(value);
+  if (target.classList.contains("operator")) handleOperatorInput(value);
 }
 
-buttons.addEventListener("click", handleExpressionButtonsClick);
+buttons.addEventListener("click", handleButtonClick);
 equalsButton.addEventListener("click", handleExpressionResult);
 clearButton.addEventListener("click", clearCalculator);
 backspaceButton.addEventListener("click", removeCharacter);
