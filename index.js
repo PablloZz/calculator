@@ -68,14 +68,14 @@ function populateDisplay(expression, result) {
 }
 
 function handleOperatorInput(newOperator) {
-  operator = newOperator;
   let result = "";
-
+  
   if (secondOperand) {
     result = operate(firstOperand, operator, secondOperand);
     startNewExpression(result, newOperator);
   }
-
+  
+  operator = newOperator;
   const expression = getExpressionString(false);
   populateDisplay(expression, result);
 }
@@ -119,14 +119,6 @@ function updateOperands(newPart) {
   }
 }
 
-function clearCalculator() {
-  firstOperand = INITIAL_VALUES.zero;
-  secondOperand = INITIAL_VALUES.empty;
-  operator = INITIAL_VALUES.empty;
-  expressionOutput.textContent = firstOperand;
-  expressionResultOutput.textContent = "";
-}
-
 function handleOperandInput(newPart) {
   updateOperands(newPart);
   const expression = getExpressionString(false);
@@ -151,6 +143,25 @@ function removeCharacter() {
     secondOperand = INITIAL_VALUES.empty,
   ] = expressionParts;
   populateDisplay(expressionParts.join(" "));
+}
+
+function clearCalculator() {
+  firstOperand = INITIAL_VALUES.zero;
+  secondOperand = INITIAL_VALUES.empty;
+  operator = INITIAL_VALUES.empty;
+  expressionOutput.textContent = firstOperand;
+  expressionResultOutput.textContent = "";
+}
+
+function handleButtonClick(event) {
+  const { target } = event;
+  const value = target.textContent;
+
+  if (target.classList.contains("operand")) handleOperandInput(value);
+  if (target.classList.contains("operator")) handleOperatorInput(value);
+  if (target.classList.contains("equals")) calculateExpression();
+  if (target.classList.contains("backspace")) removeCharacter();
+  if (target.classList.contains("clear")) clearCalculator();
 }
 
 function handleKeyInput(event) {
@@ -178,17 +189,6 @@ function handleKeyInput(event) {
       event.target.nodeName !== BUTTON_NAME:
       return calculateExpression();
   }
-}
-
-function handleButtonClick(event) {
-  const { target } = event;
-  const value = target.textContent;
-
-  if (target.classList.contains("operand")) handleOperandInput(value);
-  if (target.classList.contains("operator")) handleOperatorInput(value);
-  if (target.classList.contains("equals")) calculateExpression();
-  if (target.classList.contains("backspace")) removeCharacter();
-  if (target.classList.contains("clear")) clearCalculator();
 }
 
 buttons.addEventListener("click", handleButtonClick);
