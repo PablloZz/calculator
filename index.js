@@ -17,7 +17,6 @@ const expressionOutput = document.querySelector(".expression");
 const expressionResultOutput = document.querySelector(".result");
 const buttons = document.querySelector(".buttons");
 const clearButton = document.querySelector(".clear-button");
-const backspaceButton = document.querySelector(".backspace-button");
 
 let firstOperand = INITIAL_VALUES.zero;
 let operator = INITIAL_VALUES.empty;
@@ -99,26 +98,6 @@ function clearCalculator() {
   expressionResultOutput.textContent = "";
 }
 
-function removeCharacter() {
-  const expression = expressionOutput.textContent.trimEnd();
-  const slicedExpression = expression.slice(0, -1);
-  let updatedExpression;
-
-  if (slicedExpression === "" || expression === "Infinity") {
-    updatedExpression = INITIAL_VALUES.zero;
-  } else {
-    updatedExpression = slicedExpression;
-  }
-
-  const expressionParts = updatedExpression.trimEnd().split(" ");
-  [
-    firstOperand,
-    operator = INITIAL_VALUES.empty,
-    secondOperand = INITIAL_VALUES.empty,
-  ] = expressionParts;
-  populateDisplay(expressionParts.join(" "));
-}
-
 const checkIfNumber = (value) => !Number.isNaN(Number.parseFloat(value));
 
 function getUpdatedOperand(operand, newPart) {
@@ -155,6 +134,26 @@ function handleOperandInput(newPart) {
   populateDisplay(expression);
 }
 
+function removeCharacter() {
+  const expression = expressionOutput.textContent.trimEnd();
+  const slicedExpression = expression.slice(0, -1);
+  let updatedExpression;
+
+  if (slicedExpression === "" || expression === "Infinity") {
+    updatedExpression = INITIAL_VALUES.zero;
+  } else {
+    updatedExpression = slicedExpression;
+  }
+
+  const expressionParts = updatedExpression.trimEnd().split(" ");
+  [
+    firstOperand,
+    operator = INITIAL_VALUES.empty,
+    secondOperand = INITIAL_VALUES.empty,
+  ] = expressionParts;
+  populateDisplay(expressionParts.join(" "));
+}
+
 function handleKeyInput(event) {
   const BUTTON_NAME = "BUTTON";
   const Keys = {
@@ -189,9 +188,9 @@ function handleButtonClick(event) {
   if (target.classList.contains("operand")) handleOperandInput(value);
   if (target.classList.contains("operator")) handleOperatorInput(value);
   if (target.classList.contains("equals")) calculateExpression();
+  if (target.classList.contains("backspace")) removeCharacter();
 }
 
 buttons.addEventListener("click", handleButtonClick);
 clearButton.addEventListener("click", clearCalculator);
-backspaceButton.addEventListener("click", removeCharacter);
 window.addEventListener("keydown", handleKeyInput);
