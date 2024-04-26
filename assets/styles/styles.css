@@ -70,6 +70,7 @@ button {
 
 .top-button {
   background: hsl(170, 10%, 40%);
+  border: 1px solid hsl(171, 10%, 50%);
 }
 
 .top-button:hover {
@@ -85,6 +86,11 @@ button {
 .bottom-button {
   flex: 1;
   height: 50px;
+}
+
+.middle-button,
+.bottom-button {
+  border: 1px solid hsl(0, 0%, 65%);
 }
 
 .top-button,
@@ -137,6 +143,7 @@ button {
   flex: 0 1.2220094043887147335423197492163 85px;
   background: hsl(39, 98%, 55%);
   color: hsl(0, 0%, 0%);
+  border: 1px solid hsl(39, 98%, 45%);
 }
 
 .equals-button:hover {
@@ -145,4 +152,4 @@ button {
 
 .equals-button:active {
   background: hsl(39, 98%, 45%);
-} 
+}
