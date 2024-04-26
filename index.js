@@ -16,9 +16,10 @@ const Signs = {
 const expressionOutput = document.querySelector(".expression");
 const expressionResultOutput = document.querySelector(".result");
 const buttons = document.querySelector(".buttons");
-const equalsButton = document.querySelector(".equals-button");
-const clearButton = document.querySelector(".clear-button");
-const backspaceButton = document.querySelector(".backspace-button");
+
+let firstOperand = INITIAL_VALUES.zero;
+let operator = INITIAL_VALUES.empty;
+let secondOperand = INITIAL_VALUES.empty;
 
 const add = (a, b) => a + b;
 const subtract = (a, b) => a - b;
@@ -28,10 +29,6 @@ const divide = (a, b) => {
 
   return a / b;
 };
-
-let firstOperand = INITIAL_VALUES.zero;
-let operator = INITIAL_VALUES.empty;
-let secondOperand = INITIAL_VALUES.empty;
 
 function operate(a, operator, b) {
   a = Number(a);
@@ -49,39 +46,10 @@ function operate(a, operator, b) {
   }
 }
 
-const checkIfNumber = (value) => !Number.isNaN(Number.parseFloat(value));
-const checkIfOperator = (value) => !checkIfNumber(value) && value !== Signs.DOT;
-
-function getUpdatedOperand(operand, newPart) {
-  const isDot = newPart === Signs.DOT;
-
-  if (isDot && operand.includes(Signs.DOT)) return operand;
-  if (checkIfNumber(operand) && isDot) return `${operand}${Signs.DOT}`;
-  if (operand === INITIAL_VALUES.zero && !isDot) return newPart;
-
-  if (!checkIfNumber(operand) && isDot) {
-    return `${INITIAL_VALUES.zero}${Signs.DOT}`;
-  }
-
-  if (operand !== INITIAL_VALUES.zero && !isDot) {
-    return operand + newPart;
-  }
-}
-
-function updateExpressionParts(newPart) {
-  const isOperator = checkIfOperator(newPart);
-
-  if (!operator && !isOperator) {
-    firstOperand = getUpdatedOperand(firstOperand, newPart);
-    return;
-  }
-
-  if (operator && !isOperator) {
-    secondOperand = getUpdatedOperand(secondOperand, newPart);
-    return;
-  }
-
-  if (isOperator) operator = newPart;
+function startNewExpression(result, newOperator) {
+  firstOperand = result === ERROR_MESSAGE ? INITIAL_VALUES.zero : result;
+  secondOperand = INITIAL_VALUES.empty;
+  operator = newOperator;
 }
 
 function getExpressionString(shouldCalculateResult) {
@@ -99,13 +67,20 @@ function populateDisplay(expression, result) {
   if (result) expressionResultOutput.textContent = result;
 }
 
-function startNewExpression(result, newOperator) {
-  firstOperand = result === ERROR_MESSAGE ? INITIAL_VALUES.zero : result;
-  secondOperand = INITIAL_VALUES.empty;
+function handleOperatorInput(newOperator) {
+  let result = "";
+  
+  if (secondOperand) {
+    result = operate(firstOperand, operator, secondOperand);
+    startNewExpression(result, newOperator);
+  }
+  
   operator = newOperator;
+  const expression = getExpressionString(false);
+  populateDisplay(expression, result);
 }
 
-function handleExpressionResult() {
+function calculateExpression() {
   if (!secondOperand) return;
 
   const expression = getExpressionString(true);
@@ -114,12 +89,40 @@ function handleExpressionResult() {
   startNewExpression(result);
 }
 
-function clearCalculator() {
-  firstOperand = INITIAL_VALUES.zero;
-  secondOperand = INITIAL_VALUES.empty;
-  operator = INITIAL_VALUES.empty;
-  expressionOutput.textContent = firstOperand;
-  expressionResultOutput.textContent = "";
+const checkIfNumber = (value) => !Number.isNaN(Number.parseFloat(value));
+
+function getUpdatedOperand(operand, newPart) {
+  const isDot = newPart === Signs.DOT;
+
+  if (isDot && operand.includes(Signs.DOT)) return operand;
+  if (checkIfNumber(operand) && isDot) return `${operand}${Signs.DOT}`;
+  if (operand === INITIAL_VALUES.zero && !isDot) return newPart;
+
+  if (!checkIfNumber(operand) && isDot) {
+    return `${INITIAL_VALUES.zero}${Signs.DOT}`;
+  }
+
+  if (operand !== INITIAL_VALUES.zero && !isDot) {
+    return operand + newPart;
+  }
+}
+
+function updateOperands(newPart) {
+  if (!operator) {
+    firstOperand = getUpdatedOperand(firstOperand, newPart);
+    return;
+  }
+
+  if (operator) {
+    secondOperand = getUpdatedOperand(secondOperand, newPart);
+    return;
+  }
+}
+
+function handleOperandInput(newPart) {
+  updateOperands(newPart);
+  const expression = getExpressionString(false);
+  populateDisplay(expression);
 }
 
 function removeCharacter() {
@@ -139,59 +142,54 @@ function removeCharacter() {
     operator = INITIAL_VALUES.empty,
     secondOperand = INITIAL_VALUES.empty,
   ] = expressionParts;
-  expressionOutput.textContent = expressionParts.join(" ");
+  populateDisplay(expressionParts.join(" "));
 }
 
-function handleExpressionInput(newValue) {
-  let result = "";
+function clearCalculator() {
+  firstOperand = INITIAL_VALUES.zero;
+  secondOperand = INITIAL_VALUES.empty;
+  operator = INITIAL_VALUES.empty;
+  expressionOutput.textContent = firstOperand;
+  expressionResultOutput.textContent = "";
+}
 
-  if (secondOperand && checkIfOperator(newValue)) {
-    result = operate(firstOperand, operator, secondOperand);
-    startNewExpression(result, newValue);
-  } else {
-    updateExpressionParts(newValue);
-  }
+function handleButtonClick(event) {
+  const { target } = event;
+  const value = target.textContent;
 
-  const expression = getExpressionString(false);
-  populateDisplay(expression, result);
+  if (target.classList.contains("operand")) handleOperandInput(value);
+  if (target.classList.contains("operator")) handleOperatorInput(value);
+  if (target.classList.contains("equals")) calculateExpression();
+  if (target.classList.contains("backspace")) removeCharacter();
+  if (target.classList.contains("clear")) clearCalculator();
 }
 
 function handleKeyInput(event) {
-  const { key } = event;
   const BUTTON_NAME = "BUTTON";
   const Keys = {
     BACKSPACE: "Backspace",
     ENTER: "Enter",
   };
+  const { key } = event;
 
   switch (true) {
     case checkIfNumber(key):
     case key === Signs.DOT:
+      return handleOperandInput(key);
     case key === Signs.PLUS:
     case key === Signs.MINUS:
-      return handleExpressionInput(key);
+      return handleOperatorInput(key);
     case key === Signs.DIVIDE_BACKSLASH || key === Signs.DIVIDE:
-      return handleExpressionInput(Signs.DIVIDE);
+      return handleOperatorInput(Signs.DIVIDE);
     case key === Signs.MULTIPLY_X || key === Signs.MULTIPLY:
-      return handleExpressionInput(Signs.MULTIPLY_X);
+      return handleOperatorInput(Signs.MULTIPLY_X);
     case key === Keys.BACKSPACE:
       return removeCharacter();
     case (key === Signs.EQUAL || key === Keys.ENTER) &&
       event.target.nodeName !== BUTTON_NAME:
-      return handleExpressionResult();
+      return calculateExpression();
   }
 }
 
-function handleExpressionButtonsClick(event) {
-  const { target } = event;
-
-  if (target.classList.contains("expression-button")) {
-    handleExpressionInput(target.textContent);
-  }
-}
-
-buttons.addEventListener("click", handleExpressionButtonsClick);
-equalsButton.addEventListener("click", handleExpressionResult);
-clearButton.addEventListener("click", clearCalculator);
-backspaceButton.addEventListener("click", removeCharacter);
+buttons.addEventListener("click", handleButtonClick);
 window.addEventListener("keydown", handleKeyInput);

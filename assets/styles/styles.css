@@ -103,7 +103,7 @@ button {
 .top-button,
 .middle-button,
 .bottom-button,
-.equals-button {
+.equals {
   min-width: 50px;
   padding: 5px;
   font-size: 26px;
@@ -138,26 +138,26 @@ button {
   gap: 10px;
 }
 
-.dot-button {
+.dot {
   flex: 0 2 100%;
 }
 
-.zero-button {
+.zero {
   flex: 0 1 100%;
 }
 
-.equals-button {
+.equals {
   flex: 0 1.2220094043887147335423197492163 85px;
   background: hsl(39, 98%, 55%);
   color: hsl(0, 0%, 0%);
   border: 1px solid hsl(39, 98%, 45%);
 }
 
-.equals-button:hover {
+.equals:hover {
   background: hsl(39, 98%, 50%);
 }
 
-.equals-button:active {
+.equals:active {
   background: hsl(39, 98%, 45%);
 }
 
