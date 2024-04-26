@@ -137,8 +137,8 @@ function removeCharacter() {
   populateDisplay(expressionParts.join(" "));
 }
 
-function handleNumberInput(newNumber) {
-  updateOperands(newNumber);
+function handleOperandInput(newPart) {
+  updateOperands(newPart);
   const expression = getExpressionString(false);
   populateDisplay(expression);
 }
@@ -157,17 +157,17 @@ function handleOperatorInput(newOperator) {
 }
 
 function handleKeyInput(event) {
-  const { key } = event;
   const BUTTON_NAME = "BUTTON";
   const Keys = {
     BACKSPACE: "Backspace",
     ENTER: "Enter",
   };
+  const { key } = event;
 
   switch (true) {
     case checkIfNumber(key):
     case key === Signs.DOT:
-      return handleNumberInput(key);
+      return handleOperandInput(key);
     case key === Signs.PLUS:
     case key === Signs.MINUS:
       return handleOperatorInput(key);
@@ -187,7 +187,7 @@ function handleButtonClick(event) {
   const { target } = event;
   const value = target.textContent;
 
-  if (target.classList.contains("number")) handleNumberInput(value);
+  if (target.classList.contains("operand")) handleOperandInput(value);
   if (target.classList.contains("operator")) handleOperatorInput(value);
 }
 

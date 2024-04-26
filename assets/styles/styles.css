@@ -138,11 +138,11 @@ button {
   gap: 10px;
 }
 
-.dot-button {
+.dot {
   flex: 0 2 100%;
 }
 
-.zero-button {
+.zero {
   flex: 0 1 100%;
 }
 
